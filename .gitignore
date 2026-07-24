@@ -1,0 +1,25 @@
+# Build products
+.build/
+DerivedData/
+ZCalendar.app/
+*.app
+
+# Swift Package Manager
+Package.resolved
+.swiftpm/
+
+# Xcode user-specific state
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+
+# macOS
+.DS_Store
+
+# Misc
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.perspectivev3
+!default.perspectivev3
