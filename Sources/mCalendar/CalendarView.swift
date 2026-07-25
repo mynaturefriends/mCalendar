@@ -111,39 +111,44 @@ struct MonthsGrid: View {
                 }
             }
 
-            Rectangle()
-                .fill(Color.primary.opacity(0.1))
-                .frame(height: 1)
-                .padding(.leading, gutter)
-
-            ForEach(Array(weeks.enumerated()), id: \.offset) { _, week in
-                HStack(spacing: 0) {
-                    // The week a month starts in gets the month label instead of
-                    // the week number, so month boundaries stay readable.
-                    if showWeeks {
-                        if let start = monthStarting(in: week) {
-                            Text(monthAbbrev(start))
-                                .font(.system(size: 9, weight: .bold))
-                                .foregroundStyle(.primary)
-                                .frame(width: gutter)
-                        } else {
-                            Text("\(cal.component(.weekOfYear, from: week[0]))")
-                                .font(.system(size: 9.5))
-                                .foregroundStyle(.secondary)
-                                .frame(width: gutter)
+            VStack(spacing: 5) {
+                ForEach(Array(weeks.enumerated()), id: \.offset) { _, week in
+                    HStack(spacing: 0) {
+                        // The week a month starts in gets the month label instead of
+                        // the week number, so month boundaries stay readable.
+                        if showWeeks {
+                            if let start = monthStarting(in: week) {
+                                Text(monthAbbrev(start))
+                                    .font(.system(size: 9, weight: .bold))
+                                    .foregroundStyle(.primary)
+                                    .frame(width: gutter)
+                            } else {
+                                Text("\(cal.component(.weekOfYear, from: week[0]))")
+                                    .font(.system(size: 9.5))
+                                    .foregroundStyle(.secondary)
+                                    .frame(width: gutter)
+                            }
+                        }
+                        ForEach(week, id: \.self) { day in
+                            let idx = monthIndex(of: day)
+                            DayCell(
+                                date: day,
+                                // Only the first (topmost) month is bright; the rest are gray.
+                                emphasized: idx == 0,
+                                inRange: idx != nil,
+                                cal: cal
+                            )
                         }
                     }
-                    ForEach(week, id: \.self) { day in
-                        let idx = monthIndex(of: day)
-                        DayCell(
-                            date: day,
-                            // Only the first (topmost) month is bright; the rest are gray.
-                            emphasized: idx == 0,
-                            inRange: idx != nil,
-                            cal: cal
-                        )
-                    }
                 }
+            }
+            // A faint panel behind the day grid (week rows only) separates the
+            // calendar area from the week-number gutter.
+            .background {
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(Color.primary.opacity(0.04))
+                    .padding(.leading, gutter)
+                    .padding(.vertical, -3)
             }
         }
     }
@@ -212,6 +217,8 @@ struct DayCell: View {
     let inRange: Bool
     let cal: Calendar
 
+    @State private var hovered = false
+
     var body: some View {
         let isToday = cal.isDateInToday(date)
         let weekday = cal.component(.weekday, from: date)
@@ -223,9 +230,14 @@ struct DayCell: View {
             .frame(width: 24, height: 24)
             .background(
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .fill(isToday ? Color.accentColor : .clear)
+                    .fill(isToday ? Color.accentColor
+                          : hovered ? Color.primary.opacity(0.12)
+                          : .clear)
             )
             .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+            .onHover { hovered = $0 }
+            .animation(.easeOut(duration: 0.12), value: hovered)
     }
 
     // Tiers: first month bright, other months mid-gray, padding days faint.
