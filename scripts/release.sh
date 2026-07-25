@@ -6,11 +6,11 @@ cd "$(dirname "$0")/.."
 VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" mCalendar-Info.plist)
 
 xcodebuild -project mCalendar.xcodeproj -scheme mCalendar \
-    -configuration Release -derivedDataPath .build/xcode build
+    -configuration Release -derivedDataPath build/xcode build
 
 mkdir -p build
 rm -rf build/mCalendar.app "build/mCalendar-${VERSION}.zip"
-cp -R .build/xcode/Build/Products/Release/mCalendar.app build/
+cp -R build/xcode/Build/Products/Release/mCalendar.app build/
 ditto -c -k --sequesterRsrc --keepParent build/mCalendar.app "build/mCalendar-${VERSION}.zip"
 
 echo
