@@ -4,6 +4,28 @@ A minimal, keyboard-free macOS menu bar calendar. Click the date in your menu
 bar to see one continuous grid spanning up to six months — nothing more,
 nothing less.
 
+## Why
+
+I built Mini Calendar for one small, recurring moment: when I'm planning
+something and just need to *see* a calendar — what weekday a date falls on,
+how the next few weeks line up. Opening the full Calendar app for that always
+felt like too much.
+
+So this app does exactly one thing: click the menu bar, and a calendar is in
+front of you. No events, no reminders, no accounts — and there never will be.
+This is intentional: I'm not going to keep integrating features. A calendar
+you can glance at, instantly, that stays out of the way — that's the whole
+product.
+
+## 为什么做这个
+
+做这个应用的初衷很简单:做计划的时候,我常常只是想**看一眼日历**——某天是星期几、
+接下来几周怎么排。为了看个日期去打开完整的日历应用,总觉得太重了。
+
+所以它只做一件事:点一下菜单栏,日历就在眼前。没有日程、没有提醒、不用登录
+账号——将来也不会有。这是有意为之:我不打算继续往里集成功能。一个点开就能
+看到日历、看完就退开的小工具,这就是它的全部。
+
 ## Features
 
 - **Menu bar label** shows the current date and weekday (each can be toggled
