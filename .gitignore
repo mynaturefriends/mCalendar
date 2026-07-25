@@ -17,6 +17,10 @@ xcuserdata/
 # macOS
 .DS_Store
 
+# Editor / tooling
+.vscode/
+.claude/
+
 # Misc
 *.moved-aside
 *.pbxuser
