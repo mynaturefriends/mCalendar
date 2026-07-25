@@ -19,6 +19,16 @@ nothing less.
 - Right-click the menu bar icon for About / Quit
 - Settings live in a standalone window (gear button in the popover)
 
+## Download
+
+Grab `mCalendar-x.y.zip` from the
+[Releases page](https://github.com/mynaturefriends/mCalendar/releases), unzip,
+and drag `mCalendar.app` into `/Applications`.
+
+> **First launch**: the app is not notarized yet, so macOS will warn about an
+> unidentified developer. Right-click the app → **Open** → **Open** once; after
+> that it launches normally. (中文:首次打开请右键 →「打开」。)
+
 ## Requirements
 
 - macOS 13+
