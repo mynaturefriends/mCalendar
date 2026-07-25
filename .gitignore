@@ -3,6 +3,7 @@
 DerivedData/
 mCalendar.app/
 *.app
+*.zip
 
 # Swift Package Manager
 Package.resolved
