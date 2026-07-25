@@ -125,8 +125,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             window.styleMask = [.titled, .closable]
             window.title = settings.t("settings")
             window.isReleasedWhenClosed = false
-            window.center()
             settingsWindow = window
+        }
+        // Center on the screen the user is on, every time it opens.
+        if let window = settingsWindow {
+            window.layoutIfNeeded()
+            let mouse = NSEvent.mouseLocation
+            let screen = NSScreen.screens.first { NSMouseInRect(mouse, $0.frame, false) } ?? NSScreen.main
+            if let frame = screen?.visibleFrame {
+                let size = window.frame.size
+                window.setFrameOrigin(NSPoint(
+                    x: frame.midX - size.width / 2,
+                    y: frame.midY - size.height / 2
+                ))
+            }
         }
         settingsWindow?.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
