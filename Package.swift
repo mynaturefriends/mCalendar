@@ -2,14 +2,14 @@
 import PackageDescription
 
 let package = Package(
-    name: "ZCalendar",
+    name: "mCalendar",
     platforms: [
         .macOS(.v13)
     ],
     targets: [
         .executableTarget(
-            name: "ZCalendar",
-            path: "Sources/ZCalendar"
+            name: "mCalendar",
+            path: "Sources/mCalendar"
         )
     ]
 )

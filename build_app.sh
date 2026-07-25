@@ -1,5 +1,5 @@
 #!/bin/bash
-# Builds ZCalendar.app — a menubar-only macOS calendar app.
+# Builds mCalendar.app — a menubar-only macOS calendar app.
 set -e
 
 cd "$(dirname "$0")"
@@ -7,15 +7,15 @@ cd "$(dirname "$0")"
 echo "Building release binary..."
 swift build -c release
 
-APP="ZCalendar.app"
-BIN=".build/release/ZCalendar"
+APP="mCalendar.app"
+BIN=".build/release/mCalendar"
 
 echo "Assembling $APP ..."
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS"
 mkdir -p "$APP/Contents/Resources"
 
-cp "$BIN" "$APP/Contents/MacOS/ZCalendar"
+cp "$BIN" "$APP/Contents/MacOS/mCalendar"
 
 cat > "$APP/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -23,17 +23,17 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 <plist version="1.0">
 <dict>
     <key>CFBundleName</key>
-    <string>ZCalendar</string>
+    <string>Mini Calendar</string>
     <key>CFBundleDisplayName</key>
-    <string>ZCalendar</string>
+    <string>Mini Calendar</string>
     <key>CFBundleIdentifier</key>
-    <string>com.z.zcalendar</string>
+    <string>me.mynaturefriends.mcalendar</string>
     <key>CFBundleVersion</key>
     <string>1.0</string>
     <key>CFBundleShortVersionString</key>
     <string>1.0</string>
     <key>CFBundleExecutable</key>
-    <string>ZCalendar</string>
+    <string>mCalendar</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>LSMinimumSystemVersion</key>

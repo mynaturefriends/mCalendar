@@ -1,7 +1,7 @@
 # Build products
 .build/
 DerivedData/
-ZCalendar.app/
+mCalendar.app/
 *.app
 
 # Swift Package Manager

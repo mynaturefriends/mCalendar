@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AA0000000000000000000004"
-               BuildableName = "ZCalendar.app"
-               BlueprintName = "ZCalendar"
-               ReferencedContainer = "container:ZCalendar.xcodeproj">
+               BuildableName = "mCalendar.app"
+               BlueprintName = "mCalendar"
+               ReferencedContainer = "container:mCalendar.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -44,9 +44,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AA0000000000000000000004"
-            BuildableName = "ZCalendar.app"
-            BlueprintName = "ZCalendar"
-            ReferencedContainer = "container:ZCalendar.xcodeproj">
+            BuildableName = "mCalendar.app"
+            BlueprintName = "mCalendar"
+            ReferencedContainer = "container:mCalendar.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AA0000000000000000000004"
-            BuildableName = "ZCalendar.app"
-            BlueprintName = "ZCalendar"
-            ReferencedContainer = "container:ZCalendar.xcodeproj">
+            BuildableName = "mCalendar.app"
+            BlueprintName = "mCalendar"
+            ReferencedContainer = "container:mCalendar.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
