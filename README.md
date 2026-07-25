@@ -41,7 +41,10 @@ Open `mCalendar.xcodeproj` in Xcode and hit **⌘R**.
 Command line alternatives:
 
 ```sh
-# Via Xcode's build system
+# Release app + distribution zip, output under build/
+./scripts/release.sh
+
+# Or via Xcode's build system directly
 xcodebuild -project mCalendar.xcodeproj -scheme mCalendar -configuration Release build
 
 # Or run the bare executable via SwiftPM (no app bundle)

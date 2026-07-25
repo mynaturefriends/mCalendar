@@ -1,7 +1,7 @@
 # Build products
 .build/
+build/
 DerivedData/
-mCalendar.app/
 *.app
 *.zip
 
