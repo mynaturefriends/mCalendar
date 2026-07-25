@@ -259,6 +259,7 @@ struct SettingsView: View {
             toggleRow("showDate", $settings.showDate)
             toggleRow("showWeekday", $settings.showWeekday)
             toggleRow("showWeekNums", $settings.showWeekNumbers)
+            toggleRow("launchAtLogin", $settings.launchAtLogin)
 
             HStack {
                 Text(settings.t("language"))

@@ -1,4 +1,5 @@
 import SwiftUI
+import ServiceManagement
 
 enum AppearanceMode: String, CaseIterable, Identifiable {
     case system, light, dark
@@ -53,6 +54,25 @@ final class Settings: ObservableObject {
         didSet { UserDefaults.standard.set(showWeekNumbers, forKey: "showWeekNumbers") }
     }
 
+    /// Launch at login, backed by SMAppService (source of truth is the system).
+    @Published var launchAtLogin: Bool {
+        didSet {
+            guard oldValue != launchAtLogin else { return }
+            do {
+                if launchAtLogin {
+                    try SMAppService.mainApp.register()
+                } else {
+                    try SMAppService.mainApp.unregister()
+                }
+            } catch {
+                // Registration failed (e.g. running outside an app bundle) — re-sync.
+                DispatchQueue.main.async { [weak self] in
+                    self?.launchAtLogin = SMAppService.mainApp.status == .enabled
+                }
+            }
+        }
+    }
+
 
     /// Called (on the main actor) whenever a setting changes, so AppKit bits can refresh.
     var onChange: (() -> Void)?
@@ -66,6 +86,7 @@ final class Settings: ObservableObject {
         showDate = UserDefaults.standard.object(forKey: "showDate") as? Bool ?? true
         showWeekday = UserDefaults.standard.object(forKey: "showWeekday") as? Bool ?? true
         showWeekNumbers = UserDefaults.standard.object(forKey: "showWeekNumbers") as? Bool ?? true
+        launchAtLogin = SMAppService.mainApp.status == .enabled
     }
 
     var locale: Locale {
@@ -105,7 +126,7 @@ final class Settings: ObservableObject {
             "months": "Months", "settings": "Settings",
             "showDate": "Date in menu bar", "showWeekday": "Weekday in menu bar",
             "showWeekNums": "Week numbers", "about": "About Mini Calendar",
-            "author": "Author: Zhou Yang"
+            "author": "Author: Zhou Yang", "launchAtLogin": "Launch at login"
         ],
         "zh": [
             "today": "今天", "language": "语言", "appearance": "外观",
@@ -113,7 +134,7 @@ final class Settings: ObservableObject {
             "months": "显示月数", "settings": "设置",
             "showDate": "菜单栏显示日期", "showWeekday": "菜单栏显示星期",
             "showWeekNums": "显示周数列", "about": "关于 Mini Calendar",
-            "author": "作者：Zhou Yang"
+            "author": "作者：Zhou Yang", "launchAtLogin": "开机自动启动"
         ]
     ]
 }
