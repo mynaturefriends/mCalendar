@@ -49,9 +49,9 @@ Grab `mCalendar-x.y.zip` from the
 [Releases page](https://github.com/mynaturefriends/mCalendar/releases), unzip,
 and drag `mCalendar.app` into `/Applications`.
 
-> **First launch**: the app is not notarized yet, so macOS will warn about an
-> unidentified developer. Right-click the app → **Open** → **Open** once; after
-> that it launches normally. (中文:首次打开请右键 →「打开」。)
+Builds from v1.0.1 on are signed with a Developer ID certificate and notarized
+by Apple, so they open normally — no security warning, no right-click dance.
+(中文:v1.0.1 起已通过 Apple 公证,下载后可直接打开。)
 
 ## Requirements
 
