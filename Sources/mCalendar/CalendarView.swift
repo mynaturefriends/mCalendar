@@ -28,8 +28,10 @@ struct CalendarView: View {
             dragHandle
             footer
         }
-        .padding(7)
-        .frame(width: 250)
+        // The grid's left edge is the week-number gutter, which already reads as
+        // inset, so the left margin stays tighter than the other three.
+        .padding(EdgeInsets(top: 9, leading: 6, bottom: 9, trailing: 9))
+        .frame(width: 225)
         .preferredColorScheme(settings.colorScheme)
     }
 
@@ -83,6 +85,9 @@ struct CalendarView: View {
             Text(rangeTitle)
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(.primary)
+                // Line the title up with the week-number text, which is centred
+                // in the gutter rather than flush with the content edge.
+                .padding(.leading, 5)
             Spacer()
             HStack(spacing: 12) {
                 Button(action: { shift(by: -1) }) { Image(systemName: "chevron.left") }
