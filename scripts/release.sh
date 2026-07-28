@@ -50,7 +50,21 @@ if [ -n "$IDENTITY" ]; then
         # afterwards, with the ticket inside.
         echo "Submitting for notarization (this usually takes a few minutes)..."
         ditto -c -k --sequesterRsrc --keepParent "$APP" "$ZIP"
-        xcrun notarytool submit "$ZIP" --keychain-profile "$NOTARY_PROFILE" --wait
+
+        # --wait exits 0 even when the verdict is Invalid, so check the verdict
+        # and print the reason rather than failing later inside stapler.
+        LOG=$(mktemp)
+        xcrun notarytool submit "$ZIP" --keychain-profile "$NOTARY_PROFILE" --wait 2>&1 | tee "$LOG"
+        if ! grep -q "status: Accepted" "$LOG"; then
+            SUBMISSION=$(sed -n 's/.*id: \([0-9a-f-]\{36\}\).*/\1/p' "$LOG" | head -1)
+            echo
+            echo "Notarization failed:"
+            [ -n "$SUBMISSION" ] && xcrun notarytool log "$SUBMISSION" --keychain-profile "$NOTARY_PROFILE"
+            rm -f "$LOG"
+            exit 1
+        fi
+        rm -f "$LOG"
+
         xcrun stapler staple "$APP"
         rm -f "$ZIP"
     else
