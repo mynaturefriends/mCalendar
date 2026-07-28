@@ -28,7 +28,7 @@ struct CalendarView: View {
             dragHandle
             footer
         }
-        .padding(14)
+        .padding(7)
         .frame(width: 250)
         .preferredColorScheme(settings.colorScheme)
     }
