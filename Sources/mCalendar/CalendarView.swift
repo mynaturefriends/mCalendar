@@ -4,6 +4,9 @@ import AppKit
 struct CalendarView: View {
     @EnvironmentObject var settings: Settings
     @State private var anchor = Date()
+    @State private var dragStartCount: Int?
+    @State private var dragStartY: CGFloat?
+    @State private var handleHovered = false
 
     private var cal: Calendar {
         var c = Calendar(identifier: .gregorian)
@@ -13,7 +16,7 @@ struct CalendarView: View {
     }
 
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 0) {
             header
             MonthsGrid(
                 firstMonthStart: startOfMonth(anchor),
@@ -21,11 +24,58 @@ struct CalendarView: View {
                 showWeeks: settings.showWeekNumbers,
                 cal: cal
             )
+            .padding(.top, 12)
+            dragHandle
             footer
         }
         .padding(14)
         .frame(width: 250)
         .preferredColorScheme(settings.colorScheme)
+    }
+
+    /// Roughly how much taller the popover gets per added month (measured: a month
+    /// adds 4–5 week rows of 24pt plus 5pt spacing).
+    private let monthHeight: CGFloat = 125
+
+    /// Drag down/up to open or close months, like pulling the bottom edge of the
+    /// grid — the grip on the Notification Center calendar widget.
+    private var dragHandle: some View {
+        Capsule()
+            .fill(Color.primary.opacity(handleHovered ? 0.28 : 0.15))
+            .frame(width: 36, height: 5)
+            .padding(.top, 8)
+            .padding(.bottom, 4)
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+            .onHover { hovering in
+                handleHovered = hovering
+                if hovering { NSCursor.resizeUpDown.push() } else { NSCursor.pop() }
+            }
+            .gesture(
+                DragGesture(minimumDistance: 1)
+                    .onChanged { _ in
+                        // Measure against the screen, not the view: changing the month
+                        // count resizes the popover and moves this handle, so a
+                        // view-local translation would feed back on itself and run
+                        // away to the limits after one small drag.
+                        let y = NSEvent.mouseLocation.y
+                        guard let startY = dragStartY, let startCount = dragStartCount else {
+                            dragStartY = y
+                            dragStartCount = settings.monthCount
+                            return
+                        }
+                        // One month per month-height of travel, so the handle stays
+                        // under the pointer as the grid grows. Screen y grows upward,
+                        // so dragging down opens more months.
+                        let months = Int(((startY - y) / monthHeight).rounded())
+                        let newCount = min(6, max(1, startCount + months))
+                        if newCount != settings.monthCount { settings.monthCount = newCount }
+                    }
+                    .onEnded { _ in
+                        dragStartY = nil
+                        dragStartCount = nil
+                    }
+            )
     }
 
     private var header: some View {
@@ -50,7 +100,7 @@ struct CalendarView: View {
             Spacer()
             Button(action: { (NSApp.delegate as? AppDelegate)?.openSettings() }) {
                 Image(systemName: "gearshape")
-                    .font(.system(size: 13))
+                    .font(.system(size: 16))
                     .foregroundStyle(.secondary)
             }
             .buttonStyle(.borderless)
@@ -300,7 +350,7 @@ struct SettingsView: View {
             Divider()
 
             HStack {
-                Text("Mini Calendar 1.0 · \(settings.t("author"))")
+                Text("Mini Calendar \(Settings.appVersion) · \(settings.t("author"))")
                     .font(.system(size: 10))
                     .foregroundStyle(.secondary)
                 Spacer()

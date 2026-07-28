@@ -32,6 +32,8 @@ product.
   off; falls back to a calendar icon)
 - **Continuous multi-month view**: 1–6 months in a single scrolling-free grid,
   the current month bright, following months dimmed
+- **Drag the grip** under the grid to open or close months on the spot (or set
+  the count in Settings)
 - **Week numbers** in the left gutter, with the month abbreviation marking the
   week each month starts (column can be hidden)
 - **Today** highlighted, `‹ ◯ ›` to page months / jump back to today
@@ -80,8 +82,8 @@ main window. To launch it at login, add the built app to
 ## 简介
 
 一个极简的 macOS 菜单栏日历:点击菜单栏上的日期,弹出一张连续显示 1–6 个月的
-日历。支持周数列、今天高亮、浅色/深色外观、中英文界面,设置在独立窗口中,
-菜单栏图标右键可退出。
+日历,拖动日历下方的小横条即可随手增减月份。支持周数列、今天高亮、浅色/深色
+外观、中英文界面,设置在独立窗口中,菜单栏图标右键可退出。
 
 ## License
 

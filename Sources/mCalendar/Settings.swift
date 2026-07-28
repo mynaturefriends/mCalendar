@@ -11,6 +11,12 @@ enum AppearanceMode: String, CaseIterable, Identifiable {
 final class Settings: ObservableObject {
     static let shared = Settings()
 
+    /// Marketing version from the bundle, so About and the settings footer can't
+    /// drift from Info.plist. The fallback only applies to `swift run` builds,
+    /// which have no bundle.
+    static let appVersion = Bundle.main
+        .object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "dev"
+
     /// "system", "en", or "zh-Hans".
     @Published var languageCode: String {
         didSet {

@@ -149,7 +149,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.activate(ignoringOtherApps: true)
         NSApp.orderFrontStandardAboutPanel(options: [
             .applicationName: "Mini Calendar",
-            .applicationVersion: "1.0",
+            .applicationVersion: Settings.appVersion,
             .version: "",
             .credits: NSAttributedString(
                 string: settings.t("author"),
