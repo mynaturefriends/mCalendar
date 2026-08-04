@@ -53,6 +53,16 @@ Builds from v1.0.1 on are signed with a Developer ID certificate and notarized
 by Apple, so they open normally — no security warning, no right-click dance.
 (中文:v1.0.1 起已通过 Apple 公证,下载后可直接打开。)
 
+## Privacy
+
+Mini Calendar collects nothing, sends nothing, and contains no network code —
+it never even links a networking framework. Six preferences are stored locally
+and that is all. See [PRIVACY.md](PRIVACY.md), which also lists the commands to
+verify this yourself.
+
+(中文:不收集任何信息,不联网,只在本地保存六项设置。详见
+[PRIVACY.md](PRIVACY.md)。)
+
 ## Requirements
 
 - macOS 13+
