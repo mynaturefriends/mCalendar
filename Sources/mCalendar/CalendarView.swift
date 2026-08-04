@@ -10,8 +10,13 @@ struct CalendarView: View {
 
     private var cal: Calendar {
         var c = Calendar(identifier: .gregorian)
-        c.firstWeekday = 2 // Monday
         c.locale = settings.locale
+        // ISO 8601 weeks: Monday first, week 1 is the one holding Jan 4th. Both
+        // are pinned after the locale, which would otherwise choose
+        // minimumDaysInFirstWeek itself — that shifted the whole week-number
+        // column by one when the interface language changed.
+        c.firstWeekday = 2
+        c.minimumDaysInFirstWeek = 4
         return c
     }
 
