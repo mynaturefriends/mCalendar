@@ -185,12 +185,10 @@ struct MonthsGrid: View {
                             }
                         }
                         ForEach(week, id: \.self) { day in
-                            let idx = monthIndex(of: day)
                             DayCell(
                                 date: day,
-                                // Only the first (topmost) month is bright; the rest are gray.
-                                emphasized: idx == 0,
-                                inRange: idx != nil,
+                                monthIndex: monthIndex(of: day),
+                                banded: isBanded(day),
                                 cal: cal
                             )
                         }
@@ -204,6 +202,19 @@ struct MonthsGrid: View {
                     .fill(Color.primary.opacity(0.04))
                     .padding(.leading, gutter)
                     .padding(.vertical, -3)
+            }
+            // The month bands are square-edged, so without this the band of the
+            // topmost or bottom month would square off the panel's corners. The
+            // gutter is left unmasked so the week numbers keep their full width.
+            .mask {
+                HStack(spacing: 0) {
+                    if showWeeks {
+                        Color.black.frame(width: gutter)
+                    }
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .fill(Color.black)
+                }
+                .padding(.vertical, -3)
             }
         }
     }
@@ -222,16 +233,27 @@ struct MonthsGrid: View {
         return f.string(from: date)
     }
 
-    /// 0-based index of the displayed month `day` falls in, or nil if outside.
-    private func monthIndex(of day: Date) -> Int? {
+    /// Signed month distance from the first displayed month: negative for the
+    /// padding days before it, >= monthCount for the ones after.
+    private func monthOffset(of day: Date) -> Int {
         let comps = cal.dateComponents(
             [.month],
             from: firstMonthStart,
             to: cal.date(from: cal.dateComponents([.year, .month], from: day)) ?? day
         )
-        guard let m = comps.month, m >= 0, m < monthCount else { return nil }
-        return m
+        return comps.month ?? 0
     }
+
+    /// 0-based index of the displayed month `day` falls in, or nil if outside.
+    private func monthIndex(of day: Date) -> Int? {
+        let m = monthOffset(of: day)
+        return (0..<monthCount).contains(m) ? m : nil
+    }
+
+    /// The band alternates by calendar month, padding days included — otherwise
+    /// the first and last rows lose their background where the range starts or
+    /// ends mid-week, leaving a notch in the panel.
+    private func isBanded(_ day: Date) -> Bool { monthOffset(of: day) % 2 == 0 }
 
     private var weekdaySymbols: [String] {
         let s = cal.veryShortStandaloneWeekdaySymbols
@@ -266,13 +288,18 @@ struct MonthsGrid: View {
 
 struct DayCell: View {
     let date: Date
-    /// True when the day belongs to the first (topmost) month.
-    let emphasized: Bool
-    /// True when the day falls within one of the displayed months.
-    let inRange: Bool
+    /// 0-based index of the displayed month this day belongs to, nil for the
+    /// padding days that fall outside the range.
+    let monthIndex: Int?
+    /// True when the day's month sits on the darker band, so a boundary that
+    /// falls in the middle of a week row still reads as a break.
+    let banded: Bool
     let cal: Calendar
 
     @State private var hovered = false
+
+    /// True when the day belongs to the first (topmost) month.
+    private var emphasized: Bool { monthIndex == 0 }
 
     var body: some View {
         let isToday = cal.isDateInToday(date)
@@ -290,6 +317,13 @@ struct DayCell: View {
                           : .clear)
             )
             .frame(maxWidth: .infinity)
+            .background(
+                Rectangle()
+                    .fill(banded ? Color.primary.opacity(0.10) : .clear)
+                    // Bleed into the 5pt gap between week rows so the band of a
+                    // month is one continuous block rather than stripes.
+                    .padding(.vertical, -2.5)
+            )
             .contentShape(Rectangle())
             .onHover { hovered = $0 }
             .animation(.easeOut(duration: 0.12), value: hovered)
@@ -298,7 +332,7 @@ struct DayCell: View {
     // Tiers: first month bright, other months mid-gray, padding days faint.
     private func color(isWeekend: Bool) -> Color {
         if emphasized { return isWeekend ? .primary.opacity(0.55) : .primary }
-        if inRange { return .secondary }
+        if monthIndex != nil { return .secondary }
         return Color.secondary.opacity(0.35)
     }
 }
