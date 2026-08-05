@@ -37,7 +37,6 @@ struct CalendarView: View {
         // inset, so the left margin stays tighter than the other three.
         .padding(EdgeInsets(top: 9, leading: 6, bottom: 9, trailing: 9))
         .frame(width: 225)
-        .preferredColorScheme(settings.colorScheme)
     }
 
     /// Roughly how much taller the popover gets per added month (measured: a month
@@ -101,7 +100,7 @@ struct CalendarView: View {
             }
             .buttonStyle(.borderless)
             .font(.system(size: 12, weight: .semibold))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(Color.primary.opacity(0.75))
         }
     }
 
@@ -111,7 +110,7 @@ struct CalendarView: View {
             Button(action: { (NSApp.delegate as? AppDelegate)?.openSettings() }) {
                 Image(systemName: "gearshape")
                     .font(.system(size: 16))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.primary.opacity(0.7))
             }
             .buttonStyle(.borderless)
         }
@@ -166,7 +165,7 @@ struct MonthsGrid: View {
                         .font(.system(size: 10, weight: .semibold))
                         .textCase(.uppercase)
                         .tracking(0.5)
-                        .foregroundStyle(isWeekendColumn(i) ? Color.secondary.opacity(0.7) : Color.secondary)
+                        .foregroundStyle(Color.primary.opacity(isWeekendColumn(i) ? 0.66 : 0.8))
                         .frame(maxWidth: .infinity)
                 }
             }
@@ -185,7 +184,7 @@ struct MonthsGrid: View {
                             } else {
                                 Text("\(cal.component(.weekOfYear, from: week[0]))")
                                     .font(.system(size: 9.5))
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(Color.primary.opacity(0.78))
                                     .frame(width: gutter)
                             }
                         }
@@ -200,11 +199,17 @@ struct MonthsGrid: View {
                     }
                 }
             }
-            // A faint panel behind the day grid (week rows only) separates the
-            // calendar area from the week-number gutter.
+            // A panel behind the day grid (week rows only) separates the calendar
+            // area from the week-number gutter.
+            //
+            // It leans towards the content background colour -- white in light
+            // mode, near-black in dark -- rather than a wash of `primary`. The
+            // popover is translucent, so a wash of primary darkened an already
+            // grey light-mode backdrop and left the dimmer day tiers illegible;
+            // this pulls the backdrop towards a known lightness instead.
             .background {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(Color.primary.opacity(0.04))
+                    .fill(Color(nsColor: .textBackgroundColor).opacity(0.6))
                     .padding(.leading, gutter)
                     .padding(.vertical, -3)
             }
@@ -335,10 +340,16 @@ struct DayCell: View {
     }
 
     // Tiers: first month bright, other months mid-gray, padding days faint.
+    //
+    // The opacities come from contrast measured on screen rather than picked by
+    // eye, against the panel this draws on. In light mode every tier below the
+    // brightest used to fall under 3:1 and the padding days all but vanished.
+    // In-range days now clear 4.5:1; padding days sit near 3:1 on purpose, so
+    // they stay legible without competing with the month you asked for.
     private func color(isWeekend: Bool) -> Color {
-        if emphasized { return isWeekend ? .primary.opacity(0.55) : .primary }
-        if monthIndex != nil { return .secondary }
-        return Color.secondary.opacity(0.35)
+        if emphasized { return .primary.opacity(isWeekend ? 0.78 : 1) }
+        if monthIndex != nil { return .primary.opacity(0.76) }
+        return .primary.opacity(0.6)
     }
 }
 
@@ -404,7 +415,6 @@ struct SettingsView: View {
         .font(.system(size: 12))
         .padding(16)
         .frame(width: 300)
-        .preferredColorScheme(settings.colorScheme)
     }
 
     private func toggleRow(_ key: String, _ binding: Binding<Bool>) -> some View {
