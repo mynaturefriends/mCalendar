@@ -88,6 +88,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         let popover = NSPopover()
         popover.behavior = .applicationDefined // we manage dismissal ourselves
+        popover.appearance = appearance
         let hosting = NSHostingController(rootView: CalendarView().environmentObject(settings))
         hosting.sizingOptions = [.preferredContentSize] // fit content, avoid top clipping
         popover.contentViewController = hosting
@@ -198,11 +199,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    private func applyAppearance() {
+    /// nil means "follow the system", which is what an unset appearance does.
+    private var appearance: NSAppearance? {
         switch settings.appearance {
-        case .system: NSApp.appearance = nil
-        case .light: NSApp.appearance = NSAppearance(named: .aqua)
-        case .dark: NSApp.appearance = NSAppearance(named: .darkAqua)
+        case .system: return nil
+        case .light: return NSAppearance(named: .aqua)
+        case .dark: return NSAppearance(named: .darkAqua)
         }
+    }
+
+    private func applyAppearance() {
+        NSApp.appearance = appearance
+        // A popover anchored to a status item inherits the menu bar's appearance
+        // rather than the app's, so it has to be told separately.
+        popover?.appearance = appearance
     }
 }

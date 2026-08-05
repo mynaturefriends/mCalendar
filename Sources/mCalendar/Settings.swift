@@ -99,14 +99,6 @@ final class Settings: ObservableObject {
         languageCode == "system" ? .autoupdatingCurrent : Locale(identifier: languageCode)
     }
 
-    var colorScheme: ColorScheme? {
-        switch appearance {
-        case .system: return nil
-        case .light: return .light
-        case .dark: return .dark
-        }
-    }
-
     /// Resolves "system" / any code to one of the two string tables we ship.
     var effectiveLang: String {
         let code: String
