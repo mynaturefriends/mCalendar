@@ -4,6 +4,12 @@ A minimal, keyboard-free macOS menu bar calendar. Click the date in your menu
 bar to see one continuous grid spanning up to six months — nothing more,
 nothing less.
 
+<p align="center">
+  <img src="docs/screenshot-light.png" width="300" alt="Mini Calendar showing August to October 2026 in the light appearance">
+  &nbsp;&nbsp;
+  <img src="docs/screenshot-dark.png" width="300" alt="Mini Calendar showing August to October 2026 in the dark appearance">
+</p>
+
 ## Why
 
 I built Mini Calendar for one small, recurring moment: when I'm planning
